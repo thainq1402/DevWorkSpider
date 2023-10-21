@@ -7,7 +7,9 @@ from devworkspider.items import JobItem
 class DevworkSpider(scrapy.Spider):
     name = "devwork"
     allowed_domains = ["devwork.vn"]
-    start_urls = ["https://devwork.vn/viec-lam?country=vietnam"]
+    start_urls = ["https://devwork.vn/viec-lam?country=vietnam",
+                  "https://devwork.vn/viec-lam?country=japan"
+                  ]
 
     def parse(self, response):
         #function that get the link of each job and go into it then call the parse_dev_work to get the detail of that job
@@ -22,13 +24,9 @@ class DevworkSpider(scrapy.Spider):
         #next page
         # next_page = response.css('.pagination-item a::attr(href)').get() 
         next_page  = response.css('.pagination-next .pagination-item a::attr(href)').get()           
-        print("==========================================================="
-              +f"{next_page}")
-
         if next_page is not None:
             next_page_url = 'https://devwork.vn' + next_page
-            print("=++++++++++++++++++++++++++++++++++++++++++++++++++"
-                  + f"{next_page_url}")
+           
             yield response.follow(next_page_url,callback=self.parse) 
             #request to the next_page_url and then call the function parse 
 
