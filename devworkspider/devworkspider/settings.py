@@ -13,6 +13,12 @@ SPIDER_MODULES = ["devworkspider.spiders"]
 NEWSPIDER_MODULE = "devworkspider.spiders"
 
 
+SCRAPER_API_KEY = '7747a6d5-5765-45c2-8e19-966960c30290'
+SCRAPEOPS_FAKE_USER_AGENT_ENDPOINT = 'https://headers.scrapeops.io/v1/user-agents'
+SCRAPEOPS_FAKE_USER_AGENT_ACTIVE = True
+SCRAPEOPS_NUM_RESULTS = 50 
+
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "devworkspider (+http://www.yourdomain.com)"
 

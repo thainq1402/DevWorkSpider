@@ -2,7 +2,10 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
+'''
+Middleware is used for processing requests and response durring the 
+crawling process
+'''
 from scrapy import signals
 
 # useful for handling different item types with a single interface
@@ -101,3 +104,38 @@ class DevworkspiderDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
+
+
+
+from urllib.parse import urlencode
+from random import randint
+import requests
+
+class ScrapeOpsFakeUserAgentMiddleware:
+
+    @classmethod #can call method without create instance
+
+    def from_crawler(cls, crawler):
+        return cls(crawler.setting) 
+    '''
+    return the spider and allow to access to its config
+    crawler is an instance of spider class it contain infor about running spider 
+    and its configuration 
+    '''
+
+    #constructor for the class, parameter : setting - contain spider'setting
+    #self parameter allow to ACCESS and SET instance-specific attributes
+    # 'self' is used to access attributes and methods of the instance
+    def __init__(self,setting): 
+        #sets an instance attribute name 'scrapeops_api_key' for the instance
+        #value is retrived from the 'setting' parameter passed to the constructor 
+        self.scrapeops_api_key = setting.get('SCRAPER_API_KEY')
+        self.scrapeops_end_point = setting.get('SCRAPEOPS_FAKE_USER_AGENT_ENDPOINT','https://headers.scrapeops.io/v1/user-agents')
+        self.scrapeops_fake_user_agent_active = setting.get('SCRAPEOPS_FAKE_USER_AGENT_ACTIVE')
+        self.scrapeops_num_results = setting.get('SCRAPEOPS_NUM_RESULTS')
+        self.headers_list = []
+        self._get_user_agents_list()
+        self._scrapeops_fake_user_agents_enabled()
+        pass
+    
+
