@@ -115,13 +115,14 @@ class ScrapeOpsFakeUserAgentMiddleware:
 
     @classmethod #can call method without create instance
 
+ 
     def from_crawler(cls, crawler):
-        return cls(crawler.setting) 
-    '''
-    return the spider and allow to access to its config
+        return cls(crawler.settings)
+    '''return the spider and allow to access to its config
     crawler is an instance of spider class it contain infor about running spider 
-    and its configuration 
-    '''
+    and its configuration '''
+        
+
 
     #constructor for the class, parameter : setting - contain spider'setting
     #self parameter allow to ACCESS and SET instance-specific attributes
@@ -136,6 +137,45 @@ class ScrapeOpsFakeUserAgentMiddleware:
         self.headers_list = []
         self._get_user_agents_list()
         self._scrapeops_fake_user_agents_enabled()
+
+
+
+    '''
+    this method is used to fetch the user agent strings from the external
+    service and store them in the '_get_user_agents_list' for later use in 
+    web scraping activities
+    '''
+    def _get_user_agents_list(self):
+        #access to the external service, it set the API key to the value
+        # self.scrapeops_api_key 
+        payload = {'api_key':self.scrapeops_api_key}
+
+        if self.scrapeops_num_results is not None:
+            payload['num_results']=self.scrapeops_num_results
+        #make a request to the 'scrapeops_end_point' (endpoint)
+        #includes the payload as query parameters in the requets
+        response = requests.get(self.scrapeops_end_point,params=urlencode(payload))
+        #parse the file json from the response that come from the external service
+        json_response = response.json()
+        # set the instance attribute '_get_user_agents_list' to the 'result' in the JSON response
+        self._user_agents_list = json_response.get('result',[])
         pass
+        
+    def _get_random_user_agent(self):
+        random_index = randint(0,len(self._user_agents_list)-1)
+        return self._user_agents_list[random_index]
+    def _scrapeops_fake_user_agents_enabled(self):
+        if self.scrapeops_api_key is not None or self.scrapeops_api_key == '' or self.scrapeops_fake_user_agent_active == False:
+            self.scrapeops_fake_user_agent_active = False
+        else:
+            self.scrapeops_fake_user_agent_active = True
+
+    def process_request(self,request,spider):
+        random_user_agent = self._get_random_user_agent()
+        request.headers['User_Agent'] = random_user_agent
+        print("========NEW HEADER==========")
+        print(f"{request.headers['User_Agent']}")
+
+    
     
 
