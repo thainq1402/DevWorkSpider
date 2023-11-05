@@ -31,4 +31,4 @@ class JobItem(scrapy.Item):
     hanNopCV   = scrapy.Field()
     linkCV     = scrapy.Field()
     soLuong    = scrapy.Field()
-    luongTB    = 0
+    luongTB    = scrapy.Field()

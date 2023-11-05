@@ -61,5 +61,6 @@ class DevworkSpider(scrapy.Spider):
         job_item['hanNopCV']   = jobOverview.css('ul li:nth-child(7) span::text').get(),
         job_item['soLuong']    = jobOverview.css('ul li:nth-child(8) span::text').get(),
         job_item['linkCV']     = response.url
+        job_item['luongTB']    = 0 
 
         yield job_item
