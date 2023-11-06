@@ -38,7 +38,7 @@ class DevworkspiderPipeline:
         diaDiem_text = 'diaDiem'
         value = adapter.get(diaDiem_text)
         adapter[diaDiem_text] = value[0].strip()
-    #endregion 
+        #endregion 
         #region ETL congTy: OK 
         
         #ETL CongTy
