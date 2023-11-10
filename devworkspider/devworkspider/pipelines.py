@@ -130,13 +130,15 @@ class DataToMySQLPipeline:
             self.cur.execute(
                 """
                 Create table if not exists Stg_DevWork_Job(
-                JobID int NOT NULL AUTO_INCREMENT,
+                
                 web varchar(15),
                 tenCV varchar(300),
                 congTy varchar(300),
+                linkCongTy varchar(200),
+                linkCV varchar(200),
                 diaDiem varchar(500),
                 skills varchar(100),
-                mota text,
+                moTa text,
                 yeuCau text,
                 phucLoi text,
                 luong varchar(100),
@@ -146,8 +148,8 @@ class DataToMySQLPipeline:
                 nganhNghe varchar(50),
                 hinhThuc varchar(70),
                 hanNopCV varchar(10),
-                soLuong int,
-                PRIMARY KEY (JobID)
+                soLuong int
+            
                 )
                 """
         )
@@ -160,14 +162,14 @@ class DataToMySQLPipeline:
             self.cur.execute(
             """
             insert  into Stg_DevWork_Job (
-            web, tenCV, congTy, diaDiem, skills, mota,
+            web, tenCV, congTy, linkCongTy, diaDiem, skills, moTa,
             yeuCau, phucLoi, luong, luongTB, kinhNghiem, capBac,
-            nganhNghe, hinhThuc, hanNopCV, soLuong
+            nganhNghe, hinhThuc, hanNopCV, soLuong, linkCV
             ) 
-            values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-            """,(item['tenCV'],item['congTy'],item['linkCongTy'],item['diaDiem'],item['skills'],item['moTa'],
-                item['yeuCau'],item['phucLoi'],item['luong'],item['kinhNghiem'],item['capBac'],item['nganhNghe'],item['hinhThuc'],
-                item['hanNopCV'], item['soLuong'],item['linkCV'],item['luongTB']
+            values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            """,(str(item['web']),str(item['tenCV']),str(item['congTy']),str(item['linkCongTy']),str(item['diaDiem']),str(item['skills']),str(item['moTa']),
+                str(item['yeuCau']),str(item['phucLoi']),str(item['luong']),str(item['luongTB']),str(item['kinhNghiem']),str(item['capBac']),str(item['nganhNghe']),str(item['hinhThuc']),
+                str(item['hanNopCV']), str(item['soLuong']),str(item['linkCV'])
                 )
             )
             ## Execute insert of data into database

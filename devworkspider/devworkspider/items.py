@@ -12,7 +12,7 @@ class DevworkspiderItem(scrapy.Item):
     pass
 class JobItem(scrapy.Item):
    #thong tin co ban 
-    web        = "DevWork"
+    web        = scrapy.Field()
     tenCV      = scrapy.Field()
     congTy     = scrapy.Field()
     diaDiem    = scrapy.Field()
