@@ -111,3 +111,72 @@ class DevworkspiderPipeline:
         adapter[luong_text] = value[0]
         #endregion 
         return item
+
+
+import mysql.connector
+
+class DataToMySQLPipeline:
+    def __init__(self):
+        try:
+            self.conn = mysql.connector.connect(
+                host = '103.200.22.212',
+                user = 'dulieutu',
+                password = ':EHr0H1o5.Pro2',
+                database = 'dulieutu_TTTuyenDung'
+            )
+            #Buoc 1: Create a cursor
+            self.cur = self.conn.cursor()
+            #Buoc 2: Create table if none exist 
+            self.cur.execute(
+                """
+                Create table if not exists Stg_DevWork_Job(
+                JobID int NOT NULL AUTO_INCREMENT,
+                web varchar(15),
+                tenCV varchar(300),
+                congTy varchar(300),
+                diaDiem varchar(500),
+                skills varchar(100),
+                mota text,
+                yeuCau text,
+                phucLoi text,
+                luong varchar(100),
+                luongTB Decimal(5,2),
+                kinhNghiem Decimal(5,2),
+                capBac varchar(50),
+                nganhNghe varchar(50),
+                hinhThuc varchar(70),
+                hanNopCV varchar(10),
+                soLuong int,
+                PRIMARY KEY (JobID)
+                )
+                """
+        )
+        except Exception as e:
+            print(f"================1.Exeption in creating table : {e}================")
+
+    def process_item(self, item, spider):
+        #define the insert statement
+        try: 
+            self.cur.execute(
+            """
+            insert  into Stg_DevWork_Job (
+            web, tenCV, congTy, diaDiem, skills, mota,
+            yeuCau, phucLoi, luong, luongTB, kinhNghiem, capBac,
+            nganhNghe, hinhThuc, hanNopCV, soLuong
+            ) 
+            values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            """,(item['tenCV'],item['congTy'],item['linkCongTy'],item['diaDiem'],item['skills'],item['moTa'],
+                item['yeuCau'],item['phucLoi'],item['luong'],item['kinhNghiem'],item['capBac'],item['nganhNghe'],item['hinhThuc'],
+                item['hanNopCV'], item['soLuong'],item['linkCV'],item['luongTB']
+                )
+            )
+            ## Execute insert of data into database
+            self.conn.commit()
+        except Exception as e:
+            print(f"================ 2.Exeption in inserting data into tables {e} ================")
+
+        return item
+    def close_spider(self,spider):
+        ## Close the cursor & connection to database
+        self.cur.close()
+        self.conn.close()
